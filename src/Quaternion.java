@@ -22,6 +22,10 @@ public class Quaternion {
 
 	private double _r, _i, _j, _k;
 
+	// used to compare to floats, if difference is less than DELTA, floats are
+	// considered to be equal
+	public static final double DELTA = 0.000001;
+
 	public Quaternion(double a, double b, double c, double d) {
 		// TODO!!! Your constructor here!
 		this._r = a;
@@ -90,30 +94,28 @@ public class Quaternion {
 	 */
 	public static Quaternion valueOf(String s) {
 		double a, b, c, d;
-		
+
 		String pattern = "([-+]{0,1}(\\d)+)+([-+]{1,1}(\\d)+)i+([-+]{1,1}(\\d)+)j+([-+]{1,1}(\\d)+)k+";
 		Pattern pat = Pattern.compile(pattern);
 		Matcher mat = pat.matcher(s);
 		if (!mat.matches() || mat.groupCount() != 8) {
 			throw new IllegalArgumentException(String.format("%s does not conform to Quaternion string", s));
-			
-		} 
-		
+
+		}
 
 		try {
 			a = Double.valueOf(mat.group(1));
 			b = Double.valueOf(mat.group(3));
 			c = Double.valueOf(mat.group(5));
 			d = Double.valueOf(mat.group(7));
-			
+
 		} catch (RuntimeException e) {
-			throw new IllegalArgumentException(String.format("%s does not conform to Quaternion string (%s)", s, e.getMessage()));
+			throw new IllegalArgumentException(
+					String.format("%s does not conform to Quaternion string (%s)", s, e.getMessage()));
 		}
-		
-		
-		
+
 		return new Quaternion(a, b, c, d); // TODO!!!
-		
+
 	}
 
 	/**
@@ -123,7 +125,8 @@ public class Quaternion {
 	 */
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		return null; // TODO!!!
+
+		return new Quaternion(this.getRpart(), this.getIpart(), this.getJpart(), this.getKpart()); // TODO!!!
 	}
 
 	/**
@@ -133,7 +136,10 @@ public class Quaternion {
 	 *         zero
 	 */
 	public boolean isZero() {
-		return false; // TODO!!!
+		return (Math.abs(getRpart()) < DELTA && 
+				Math.abs(getIpart()) < DELTA && 
+				Math.abs(getJpart()) < DELTA && 
+				Math.abs(getKpart()) < DELTA); // TODO!!!
 	}
 
 	/**
@@ -237,6 +243,10 @@ public class Quaternion {
 		return null; // TODO!!!
 	}
 
+	private boolean doubleEquals(double d1, double d2) {
+		return Math.abs(d1 - d2) < DELTA;
+	}
+	
 	/**
 	 * Equality test of quaternions. Difference of equal numbers is (close to)
 	 * zero.
@@ -247,17 +257,20 @@ public class Quaternion {
 	 */
 	@Override
 	public boolean equals(Object qo) {
-		if (qo == null) return false;
-		if (qo.getClass() != this.getClass()) return false;
-		
-		Quaternion oo = (Quaternion)qo;
-		return (this.getRpart() == oo.getRpart() &&
-				this.getRpart() == oo.getRpart() &&
-				this.getRpart() == oo.getRpart() &&
-				this.getRpart() == oo.getRpart()
+		if (qo == null)
+			return false;
+		if (qo.getClass() != this.getClass())
+			return false;
+
+		Quaternion oo = (Quaternion) qo;
+		return (
+				doubleEquals(getRpart(), oo.getRpart()) &&
+				doubleEquals(getIpart(), oo.getIpart()) &&
+				doubleEquals(getJpart(), oo.getJpart()) &&
+				doubleEquals(getKpart(), oo.getKpart()) 
+				
 				);
-		
-		
+
 	}
 
 	/**
@@ -298,7 +311,7 @@ public class Quaternion {
 	 *            command line parameters
 	 */
 	public static void main(String[] arg) {
-		
+
 		Quaternion arv1 = new Quaternion(-1., 1, 2., -2.);
 		if (arg.length > 0)
 			arv1 = valueOf(arg[0]);
@@ -311,6 +324,19 @@ public class Quaternion {
 		System.out.println("conjugate: " + arv1.conjugate());
 		System.out.println("opposite: " + arv1.opposite());
 		System.out.println("hashCode: " + arv1.hashCode());
+
+		Quaternion k1 = new Quaternion(3., 7., 5., 2.);
+		Quaternion k2 = new Quaternion(3., -9., 5., 2.);
+		Quaternion k3 = new Quaternion(3., 7., 5., 2.);
+
+		System.out.println(k1);
+		System.out.println(k2);
+		System.out.println(k3);
+
+		if (k1.equals(k2)) {
+			System.out.println("EQUALS");
+		}
+
 		// Quaternion res = null;
 		// try {
 		// res = (Quaternion)arv1.clone();
