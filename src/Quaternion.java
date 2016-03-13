@@ -2,6 +2,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sun.org.apache.xpath.internal.operations.Div;
+
 /** Quaternions. Basic operations. */
 public class Quaternion {
 
@@ -149,7 +151,12 @@ public class Quaternion {
 	 * @return conjugate of <code>this</code>
 	 */
 	public Quaternion conjugate() {
-		return null; // TODO!!!
+		return new Quaternion(
+			getRpart()
+			, -getIpart()
+			, -getJpart()
+			, -getKpart()
+				);
 	}
 
 	/**
@@ -228,7 +235,22 @@ public class Quaternion {
 	 * @return quaternion <code>1/this</code>
 	 */
 	public Quaternion inverse() {
-		return null; // TODO!!!
+		
+		if (isZero()) {
+			throw new RuntimeException("Division by zero!");
+		}
+		
+		double d = getRpart()*getRpart() +
+				getIpart()*getIpart() + 
+				getJpart()*getJpart() +
+				getKpart()*getKpart();
+		return new Quaternion(
+				(getRpart() / d )
+				, ((-getIpart()) / d )
+				, ((-getJpart()) / d )
+				, ((-getKpart()) / d )
+				);
+				
 	}
 
 	/**
@@ -251,7 +273,9 @@ public class Quaternion {
 	 * @return quaternion <code>this*inverse(q)</code>
 	 */
 	public Quaternion divideByRight(Quaternion q) {
-		return null; // TODO!!!
+		return times(q.inverse());
+
+				
 	}
 
 	/**
@@ -262,7 +286,7 @@ public class Quaternion {
 	 * @return quaternion <code>inverse(q)*this</code>
 	 */
 	public Quaternion divideByLeft(Quaternion q) {
-		return null; // TODO!!!
+		return q.inverse().times(this);
 	}
 
 	private boolean doubleEquals(double d1, double d2) {
@@ -323,7 +347,11 @@ public class Quaternion {
 	 * @return norm of <code>this</code> (norm is a real number)
 	 */
 	public double norm() {
-		return 0.; // TODO!!!
+		double d = getRpart()*getRpart() +
+				getIpart()*getIpart() + 
+				getJpart()*getJpart() +
+				getKpart()*getKpart();
+		return Math.sqrt(d);
 	}
 
 	/**
