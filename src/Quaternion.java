@@ -159,7 +159,13 @@ public class Quaternion {
 	 * @return quaternion <code>-this</code>
 	 */
 	public Quaternion opposite() {
-		return null; // TODO!!!
+		
+		return new Quaternion(
+				-getRpart()
+				, -getIpart()
+				, -getJpart()
+				, -getKpart()
+				); // TODO!!!
 	}
 
 	/**
@@ -171,7 +177,13 @@ public class Quaternion {
 	 * @return quaternion <code>this+q</code>
 	 */
 	public Quaternion plus(Quaternion q) {
-		return null; // TODO!!!
+		
+		return new Quaternion(
+				this.getRpart()+q.getRpart()
+				,this.getIpart()+q.getIpart()
+				,this.getJpart()+q.getJpart()
+				,this.getKpart()+q.getKpart()
+				)	; // TODO!!!
 	}
 
 	/**
@@ -184,7 +196,12 @@ public class Quaternion {
 	 * @return quaternion <code>this*q</code>
 	 */
 	public Quaternion times(Quaternion q) {
-		return null; // TODO!!!
+		return new Quaternion(
+					getRpart()*q.getRpart() - getIpart()*q.getIpart() - getJpart()*q.getJpart() - getKpart()*q.getKpart()
+				,   getRpart()*q.getIpart() + getIpart()*q.getRpart() + getJpart()*q.getKpart() - getKpart()*q.getJpart()
+				,   getRpart()*q.getJpart() - getIpart()*q.getKpart() + getJpart()*q.getRpart() + getKpart()*q.getIpart()
+				,   getRpart()*q.getKpart() + getIpart()*q.getJpart() - getJpart()*q.getIpart() + getKpart()*q.getRpart()
+				);
 	}
 
 	/**
@@ -195,7 +212,12 @@ public class Quaternion {
 	 * @return quaternion <code>this*r</code>
 	 */
 	public Quaternion times(double r) {
-		return null; // TODO!!!
+		return new Quaternion(
+				r*getRpart()
+				, r*getIpart()
+				, r*getJpart()
+				, r*getKpart()
+				);
 	}
 
 	/**
@@ -217,7 +239,7 @@ public class Quaternion {
 	 * @return quaternion <code>this-q</code>
 	 */
 	public Quaternion minus(Quaternion q) {
-		return null; // TODO!!!
+		return plus(q.opposite());
 	}
 
 	/**
