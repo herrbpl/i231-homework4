@@ -24,6 +24,8 @@ public class Quaternion {
 
 	private double _r, _i, _j, _k;
 
+	private int hashCode;
+
 	// used to compare to floats, if difference is less than DELTA, floats are
 	// considered to be equal
 	public static final double DELTA = 0.000001;
@@ -327,17 +329,35 @@ public class Quaternion {
 	 * @return dot product of this and q
 	 */
 	public Quaternion dotMult(Quaternion q) {
-		return null; // TODO!!!
+		
+		return this.times(q.conjugate()).plus(q.times(this.conjugate())).times(0.5);
 	}
 
 	/**
 	 * Integer hashCode has to be the same for equal objects.
 	 * 
+	 * @author NASA WorldWind
+	 * @see <a href="http://worldwind31.arc.nasa.gov/svn/trunk/WorldWind/src/gov/nasa/worldwind/geom/Quaternion.java">http://worldwind31.arc.nasa.gov/svn/trunk/WorldWind/src/gov/nasa/worldwind/geom/Quaternion.java</a>
+	 * 
 	 * @return hashcode
 	 */
 	@Override
 	public int hashCode() {
-		return 0; // TODO!!!
+		if (this.hashCode == 0)
+        {
+            int result;
+            long tmp;
+            tmp = Double.doubleToLongBits(this._r);
+            result = (int) (tmp ^ (tmp >>> 32));
+            tmp = Double.doubleToLongBits(this._i);
+            result = 31 * result + (int) (tmp ^ (tmp >>> 32));
+            tmp = Double.doubleToLongBits(this._j);
+            result = 31 * result + (int) (tmp ^ (tmp >>> 32));
+            tmp = Double.doubleToLongBits(this._k);
+            result = 31 * result + (int) (tmp ^ (tmp >>> 32));
+            this.hashCode = result;
+        }
+        return this.hashCode;
 	}
 
 	/**
