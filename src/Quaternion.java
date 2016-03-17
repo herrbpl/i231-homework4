@@ -2,7 +2,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sun.org.apache.xpath.internal.operations.Div;
 
 /** Quaternions. Basic operations. */
 public class Quaternion {
@@ -22,7 +21,7 @@ public class Quaternion {
 	 *            imaginary part k
 	 */
 
-	private double _r, _i, _j, _k;
+	private double ldr, ldi, ldj, ldk;
 
 	private int hashCode;
 
@@ -32,10 +31,10 @@ public class Quaternion {
 
 	public Quaternion(double a, double b, double c, double d) {
 		// TODO!!! Your constructor here!
-		this._r = a;
-		this._i = b;
-		this._j = c;
-		this._k = d;
+		this.ldr = a;
+		this.ldi = b;
+		this.ldj = c;
+		this.ldk = d;
 	}
 
 	/**
@@ -44,7 +43,7 @@ public class Quaternion {
 	 * @return real part
 	 */
 	public double getRpart() {
-		return this._r; // TODO!!!
+		return this.ldr; // TODO!!!
 	}
 
 	/**
@@ -53,7 +52,7 @@ public class Quaternion {
 	 * @return imaginary part i
 	 */
 	public double getIpart() {
-		return this._i; // TODO!!!
+		return this.ldi; // TODO!!!
 	}
 
 	/**
@@ -62,7 +61,7 @@ public class Quaternion {
 	 * @return imaginary part j
 	 */
 	public double getJpart() {
-		return this._j; // TODO!!!
+		return this.ldj; // TODO!!!
 	}
 
 	/**
@@ -71,7 +70,7 @@ public class Quaternion {
 	 * @return imaginary part k
 	 */
 	public double getKpart() {
-		return this._k; // TODO!!!
+		return this.ldk; // TODO!!!
 	}
 
 	/**
@@ -82,7 +81,7 @@ public class Quaternion {
 	 */
 	@Override
 	public String toString() {
-		return String.format("%.0f%+.0fi%+.0fj%+.0fk", this._r, this._i, this._j, this._k); // TODO!!!
+		return String.format("%.0f%+.0fi%+.0fj%+.0fk", this.ldr, this.ldi, this.ldj, this.ldk); // TODO!!!
 	}
 
 	/**
@@ -103,7 +102,7 @@ public class Quaternion {
 		Pattern pat = Pattern.compile(pattern);
 		Matcher mat = pat.matcher(s);
 		if (!mat.matches() || mat.groupCount() != 8) {
-			throw new IllegalArgumentException(String.format("%s does not conform to Quaternion string", s));
+			throw new IllegalArgumentException(String.format("%s does not conform to Quaternion string format 'a+bi+cj+dk'", s));
 
 		}
 
@@ -115,7 +114,7 @@ public class Quaternion {
 
 		} catch (RuntimeException e) {
 			throw new IllegalArgumentException(
-					String.format("%s does not conform to Quaternion string (%s)", s, e.getMessage()));
+					String.format("%s does not conform to Quaternion string format 'a+bi+cj+dk' (%s)", s, e.getMessage()));
 		}
 
 		return new Quaternion(a, b, c, d); // TODO!!!
@@ -275,6 +274,11 @@ public class Quaternion {
 	 * @return quaternion <code>this*inverse(q)</code>
 	 */
 	public Quaternion divideByRight(Quaternion q) {
+		
+		if (q.isZero()) {
+			throw new RuntimeException("Division by zero!");
+		}
+		
 		return times(q.inverse());
 
 				
@@ -288,6 +292,11 @@ public class Quaternion {
 	 * @return quaternion <code>inverse(q)*this</code>
 	 */
 	public Quaternion divideByLeft(Quaternion q) {
+		
+		if (q.isZero()) {
+			throw new RuntimeException("Division by zero!");
+		}
+		
 		return q.inverse().times(this);
 	}
 
@@ -343,21 +352,19 @@ public class Quaternion {
 	 */
 	@Override
 	public int hashCode() {
-		if (this.hashCode == 0)
-        {
+		
             int result;
             long tmp;
-            tmp = Double.doubleToLongBits(this._r);
+            tmp = Double.doubleToLongBits(this.ldr);
             result = (int) (tmp ^ (tmp >>> 32));
-            tmp = Double.doubleToLongBits(this._i);
+            tmp = Double.doubleToLongBits(this.ldi);
             result = 31 * result + (int) (tmp ^ (tmp >>> 32));
-            tmp = Double.doubleToLongBits(this._j);
+            tmp = Double.doubleToLongBits(this.ldj);
             result = 31 * result + (int) (tmp ^ (tmp >>> 32));
-            tmp = Double.doubleToLongBits(this._k);
+            tmp = Double.doubleToLongBits(this.ldk);
             result = 31 * result + (int) (tmp ^ (tmp >>> 32));
-            this.hashCode = result;
-        }
-        return this.hashCode;
+        
+        return result;
 	}
 
 	/**
