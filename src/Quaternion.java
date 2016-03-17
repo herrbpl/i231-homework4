@@ -23,7 +23,7 @@ public class Quaternion {
 
 	private double ldr, ldi, ldj, ldk;
 
-	private int hashCode;
+	//private int hashCode;
 
 	// used to compare to floats, if difference is less than DELTA, floats are
 	// considered to be equal
